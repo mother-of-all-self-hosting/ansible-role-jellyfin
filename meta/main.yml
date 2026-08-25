@@ -3,7 +3,7 @@ galaxy_info:
   author: spatterlight
   company: spatterlight
   role_name: jellyfin
-  namespace: spatterlight
+  namespace: mash
   description: An Ansible role for installing Jellyfin, a personal media server
   platforms:
     - name: Debian
