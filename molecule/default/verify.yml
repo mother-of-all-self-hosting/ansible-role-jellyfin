@@ -111,7 +111,7 @@
     - name: Assert the Jellyfin public system information endpoint responds
       ansible.builtin.assert:
         that: jellyfin_public_info.status == 200
-        fail_msg: "/System/Info/Public answered {{ jellyfin_public_info.status | default('nothing') }}"
+        fail_msg: "/System/Info/Public answered {{ jellyfin_public_info.status | default('none') }}"
         success_msg: "/System/Info/Public answered 200"
 
     # The unit runs `docker start --attach`, so the container's own output reaches
@@ -217,7 +217,7 @@
     - name: Assert the Jellyfin first-run wizard is ready to take an administrator
       ansible.builtin.assert:
         that: jellyfin_wizard_user.status == 200
-        fail_msg: "/Startup/User answered {{ jellyfin_wizard_user.status | default('nothing') }}; the wizard never became ready"
+        fail_msg: "/Startup/User answered {{ jellyfin_wizard_user.status | default('none') }}; the wizard never became ready"
         success_msg: "The first-run wizard is ready"
 
     - name: Create the Jellyfin administrator through the first-run wizard
