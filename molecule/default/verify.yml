@@ -141,13 +141,11 @@
         fail_msg: "The journal of the current jellyfin.service invocation never reported 'Startup complete'"
         success_msg: "Jellyfin logged startup completion in the current invocation"
 
-    - name: Assert the running Jellyfin reports the version the role pins
+    - name: Assert the running Jellyfin is the version this role installs
       ansible.builtin.assert:
         that: jellyfin_public_info.json.Version == jellyfin_role_defaults.jellyfin_version
-        fail_msg: >-
-          Jellyfin reports version {{ jellyfin_public_info.json.Version }},
-          but the role pins {{ jellyfin_role_defaults.jellyfin_version }}
-        success_msg: "Jellyfin reports version {{ jellyfin_public_info.json.Version }}, as pinned"
+        fail_msg: "Jellyfin reports {{ jellyfin_public_info.json.Version | default('none') }}, expected {{ jellyfin_role_defaults.jellyfin_version }}"
+        success_msg: "Jellyfin reports {{ jellyfin_public_info.json.Version }}"
 
     - name: Assert the Jellyfin container runs the image tag the role pins
       ansible.builtin.assert:
