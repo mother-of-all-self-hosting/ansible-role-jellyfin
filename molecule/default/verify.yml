@@ -22,10 +22,10 @@
     jellyfin_molecule_client_header: 'MediaBrowser Client="molecule", Device="molecule", DeviceId="molecule", Version="1"'
 
   tasks:
-    # Role-describing values that Renovate and the release tagger key on. Loaded
-    # under a name of their own: dropping them into the play's scope would
-    # outrank the scenario's own group_vars.
-    - name: Read the Jellyfin role defaults
+    # The role is not included in this playbook, so its defaults are not in
+    # scope. Reading defaults/main.yml directly ties the version assertion
+    # below.
+    - name: Load the role defaults
       ansible.builtin.include_vars:
         file: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/defaults/main.yml"
         name: jellyfin_role_defaults
