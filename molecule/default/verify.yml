@@ -28,7 +28,7 @@
     - name: Load the role defaults
       ansible.builtin.include_vars:
         file: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/defaults/main.yml"
-        name: jellyfin_role_defaults
+        name: jellyfin_defaults
 
     - name: Read the Jellyfin container definition
       ansible.builtin.command:
@@ -143,16 +143,16 @@
 
     - name: Assert the running Jellyfin is the version this role installs
       ansible.builtin.assert:
-        that: jellyfin_public_info.json.Version == jellyfin_role_defaults.jellyfin_version
-        fail_msg: "Jellyfin reports {{ jellyfin_public_info.json.Version | default('none') }}, expected {{ jellyfin_role_defaults.jellyfin_version }}"
+        that: jellyfin_public_info.json.Version == jellyfin_defaults.jellyfin_version
+        fail_msg: "Jellyfin reports {{ jellyfin_public_info.json.Version | default('none') }}, expected {{ jellyfin_defaults.jellyfin_version }}"
         success_msg: "Jellyfin reports {{ jellyfin_public_info.json.Version }}"
 
     - name: Assert the Jellyfin container runs the image tag the role pins
       ansible.builtin.assert:
-        that: jellyfin_container_definition.Config.Image is search(':' ~ jellyfin_role_defaults.jellyfin_version ~ '$')
+        that: jellyfin_container_definition.Config.Image is search(':' ~ jellyfin_defaults.jellyfin_version ~ '$')
         fail_msg: >-
           The container runs {{ jellyfin_container_definition.Config.Image }},
-          which is not tagged {{ jellyfin_role_defaults.jellyfin_version }}
+          which is not tagged {{ jellyfin_defaults.jellyfin_version }}
         success_msg: "The container runs {{ jellyfin_container_definition.Config.Image }}"
 
     # `JELLYFIN_PublishedServerUrl` has exactly one way into the process: the
@@ -391,12 +391,12 @@
     - name: Assert the HTTP port the role publishes is the one the container listens on
       ansible.builtin.assert:
         that:
-          - ((jellyfin_role_defaults.jellyfin_container_http_port | string) ~ '/tcp') in jellyfin_container_definition.NetworkSettings.Ports
+          - ((jellyfin_defaults.jellyfin_container_http_port | string) ~ '/tcp') in jellyfin_container_definition.NetworkSettings.Ports
           - jellyfin_container_definition.HostConfig.NetworkMode == jellyfin_molecule_network
         fail_msg: >-
-          The container does not publish {{ jellyfin_role_defaults.jellyfin_container_http_port }}/tcp;
+          The container does not publish {{ jellyfin_defaults.jellyfin_container_http_port }}/tcp;
           published: {{ jellyfin_container_definition.NetworkSettings.Ports.keys() | list }}
-        success_msg: "The container publishes {{ jellyfin_role_defaults.jellyfin_container_http_port }}/tcp on the {{ jellyfin_molecule_network }} network"
+        success_msg: "The container publishes {{ jellyfin_defaults.jellyfin_container_http_port }}/tcp on the {{ jellyfin_molecule_network }} network"
 
     - name: Assert the extra container argument reached docker
       ansible.builtin.assert:
@@ -427,7 +427,7 @@
           - jellyfin_container_definition.Config.Labels['traefik.http.middlewares.jellyfin-strip-prefix.stripprefix.prefixes'] == jellyfin_path_prefix
           - >-
             jellyfin_container_definition.Config.Labels['traefik.http.services.jellyfin.loadbalancer.server.port']
-            == (jellyfin_role_defaults.jellyfin_container_http_port | string)
+            == (jellyfin_defaults.jellyfin_container_http_port | string)
         fail_msg: "The Traefik labels do not match the role's configuration: {{ jellyfin_container_definition.Config.Labels }}"
         success_msg: "The Traefik labels match the role's configuration"
 
@@ -587,7 +587,7 @@
       ansible.builtin.debug:
         msg:
           - "Jellyfin systemd: {{ jellyfin_service.status.ActiveState }} ({{ jellyfin_service.status.NRestarts }} restarts)"
-          - "Jellyfin version: {{ jellyfin_public_info.json.Version }} (role pins {{ jellyfin_role_defaults.jellyfin_version }})"
+          - "Jellyfin version: {{ jellyfin_public_info.json.Version }} (role pins {{ jellyfin_defaults.jellyfin_version }})"
           - "Jellyfin image: {{ jellyfin_container_definition.Config.Image }}"
           - "Jellyfin published server URL: {{ jellyfin_public_info.json.LocalAddress }}"
           - "Jellyfin timezone offset: {{ jellyfin_container_timezone.stdout | trim }}"
