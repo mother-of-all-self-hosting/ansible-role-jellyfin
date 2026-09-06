@@ -36,7 +36,7 @@
       register: jellyfin_container_inspect_raw
       changed_when: false
 
-    - name: Record the Jellyfin container definition
+    - name: Parse the Jellyfin container definition
       ansible.builtin.set_fact:
         jellyfin_container_definition: "{{ (jellyfin_container_inspect_raw.stdout | from_json)[0] }}"
 
