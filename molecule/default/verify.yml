@@ -33,12 +33,12 @@
     - name: Read the Jellyfin container definition
       ansible.builtin.command:
         cmd: "docker container inspect {{ jellyfin_molecule_container }}"
-      register: jellyfin_container_inspect_raw
+      register: jellyfin_container_raw
       changed_when: false
 
     - name: Parse the Jellyfin container definition
       ansible.builtin.set_fact:
-        jellyfin_container_definition: "{{ (jellyfin_container_inspect_raw.stdout | from_json)[0] }}"
+        jellyfin_container_definition: "{{ (jellyfin_container_raw.stdout | from_json)[0] }}"
 
     # ------------------------------------------------------------------
     # The negative control, started first so that it is ready by the time the
