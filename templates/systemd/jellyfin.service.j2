@@ -23,51 +23,51 @@ Environment="HOME={{ devture_systemd_docker_base_systemd_unit_home_path }}"
 ExecStartPre={{ devture_systemd_docker_base_host_command_sh }} -c '{{ jellyfin_container_cleanup_command | trim | replace("\n", " ") }}'
 
 ExecStartPre={{ devture_systemd_docker_base_host_command_docker }} create \
-			--rm \
-			--name={{ jellyfin_identifier }} \
-			{% if jellyfin_container_runtime %}
-			--runtime={{ jellyfin_container_runtime }} \
-			{% endif %}
-			--log-driver=none \
-			--user={{ jellyfin_uid }}:{{ jellyfin_gid }} \
-			--cap-drop=ALL \
-			--cap-add=CHOWN \
-			--cap-add=DAC_OVERRIDE \
-			--cap-add=FOWNER \
-			--cap-add=SETGID \
-			--cap-add=SETUID \
-			{% if jellyfin_container_read_only %}
-			--read-only \
-			{% endif %}
-			--network={{ jellyfin_container_network }} \
-			{% if jellyfin_container_http_host_bind_port %}
-			-p {{ jellyfin_container_http_host_bind_port }}:{{ jellyfin_container_http_port }} \
-			{% endif %}
-			{% if jellyfin_container_service_discover_bind_port %}
-			-p {{ jellyfin_container_service_discover_bind_port }}:{{ jellyfin_container_service_discover_port }}/udp \
-			{% endif %}
-			{% if jellyfin_container_client_discover_bind_port %}
-			-p {{ jellyfin_container_client_discover_bind_port }}:{{ jellyfin_container_client_discover_port }}/udp \
-			{% endif %}
-			{% if jellyfin_gpu_bind_path %}
-			--device={{ jellyfin_gpu_path }}:{{ jellyfin_gpu_bind_path }} \
-			{% endif %}
-			--env-file={{ jellyfin_base_path }}/env \
-			--label-file={{ jellyfin_base_path }}/labels \
-			--mount type=bind,src={{ jellyfin_data_path }},dst=/config \
-			{% if jellyfin_media_bind_path %}
-			--mount type=bind,src={{ jellyfin_media_path }},dst={{ jellyfin_media_bind_path }} \
-			{% endif %}
-			{% for volume in jellyfin_container_additional_volumes %}
-			--mount type={{ volume.type | default('bind' if '/' in volume.src else 'volume') }},src={{ volume.src }},dst={{ volume.dst }}{{ (',' + volume.options) if volume.options | default('') else '' }} \
-			{% endfor %}
-			{% for arg in jellyfin_container_extra_arguments %}
-			{{ arg }} \
-			{% endfor %}
-			{{ jellyfin_container_image }} \
-			{% for arg in jellyfin_process_extra_arguments %}
-			{{ arg }} \
-			{% endfor %}
+      --rm \
+      --name={{ jellyfin_identifier }} \
+      {% if jellyfin_container_runtime %}
+      --runtime={{ jellyfin_container_runtime }} \
+      {% endif %}
+      --log-driver=none \
+      --user={{ jellyfin_uid }}:{{ jellyfin_gid }} \
+      --cap-drop=ALL \
+      --cap-add=CHOWN \
+      --cap-add=DAC_OVERRIDE \
+      --cap-add=FOWNER \
+      --cap-add=SETGID \
+      --cap-add=SETUID \
+      {% if jellyfin_container_read_only %}
+      --read-only \
+      {% endif %}
+      --network={{ jellyfin_container_network }} \
+      {% if jellyfin_container_http_host_bind_port %}
+      -p {{ jellyfin_container_http_host_bind_port }}:{{ jellyfin_container_http_port }} \
+      {% endif %}
+      {% if jellyfin_container_service_discover_bind_port %}
+      -p {{ jellyfin_container_service_discover_bind_port }}:{{ jellyfin_container_service_discover_port }}/udp \
+      {% endif %}
+      {% if jellyfin_container_client_discover_bind_port %}
+      -p {{ jellyfin_container_client_discover_bind_port }}:{{ jellyfin_container_client_discover_port }}/udp \
+      {% endif %}
+      {% if jellyfin_gpu_bind_path %}
+      --device={{ jellyfin_gpu_path }}:{{ jellyfin_gpu_bind_path }} \
+      {% endif %}
+      --env-file={{ jellyfin_base_path }}/env \
+      --label-file={{ jellyfin_base_path }}/labels \
+      --mount type=bind,src={{ jellyfin_data_path }},dst=/config \
+      {% if jellyfin_media_bind_path %}
+      --mount type=bind,src={{ jellyfin_media_path }},dst={{ jellyfin_media_bind_path }} \
+      {% endif %}
+      {% for volume in jellyfin_container_additional_volumes %}
+      --mount type={{ volume.type | default('bind' if '/' in volume.src else 'volume') }},src={{ volume.src }},dst={{ volume.dst }}{{ (',' + volume.options) if volume.options | default('') else '' }} \
+      {% endfor %}
+      {% for arg in jellyfin_container_extra_arguments %}
+      {{ arg }} \
+      {% endfor %}
+      {{ jellyfin_container_image }} \
+      {% for arg in jellyfin_process_extra_arguments %}
+      {{ arg }} \
+      {% endfor %}
 
 {% for network in jellyfin_container_additional_networks %}
 ExecStartPre={{ devture_systemd_docker_base_host_command_docker }} network connect {{ network }} {{ jellyfin_identifier }}
