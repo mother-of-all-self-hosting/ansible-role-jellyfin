@@ -19,21 +19,6 @@ Check [`defaults/main.yml`](defaults/main.yml) for the full list of supported op
 
 💡 For an Ansible playbook which integrates this role and makes it easier to use, see the [Mother-of-All-Self-Hosting Ansible playbook](https://github.com/mother-of-all-self-hosting/mash-playbook).
 
-## Limitations
-
-Most LinuxServer docker images support non-root user operation and read-only capabilities. The Jellyfin image is not one of these. By default this role is configured to:
-
-1. Run as root user
-2. Run the container as read/write (NOT read-only)
-
-Additionally, like all LinuxServer docker images, full `cap-drop` is not supported, and several capabilities related to permissions are added to the container:
-
-- SETUID
-- SETGID
-- CHOWN
-- FOWNER
-- DAC_OVERRIDE
-
 ## Development
 
 ### pre-commit
