@@ -22,7 +22,7 @@ traefik.http.middlewares.{{ jellyfin_identifier }}-basic-auth.basicauth.users={{
 {% endif %}
 
 {% if jellyfin_container_labels_traefik_path_prefix != '/' %}
-traefik.http.middlewares.{{ jellyfin_identifier }}-slashless-redirect.redirectregex.regex=^({{ jellyfin_container_labels_traefik_path_prefix | quote }})$
+traefik.http.middlewares.{{ jellyfin_identifier }}-slashless-redirect.redirectregex.regex=^(https?://[^/]+{{ jellyfin_container_labels_traefik_path_prefix | regex_escape }})$
 traefik.http.middlewares.{{ jellyfin_identifier }}-slashless-redirect.redirectregex.replacement=${1}/
 {% set middlewares = middlewares + [jellyfin_identifier + '-slashless-redirect'] %}
 {% endif %}
