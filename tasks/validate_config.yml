@@ -17,15 +17,7 @@
     - { "old": "jellyfin_container_additional_environment_variables", "new": "jellyfin_environment_variables_additional_variables" }
     - { "old": "jellyfin_container_image_force_pull", "new": "<removed> (the new community.docker.docker_image_pull module handles this natively)" }
 
-- name: Fail if required Jellyfin settings not defined
-  ansible.builtin.fail:
-    msg: >-
-      You need to define a required configuration setting (`{{ item }}`).
-  when: "lookup('vars', item, default='') | string | length == 0"
-  with_items:
-    - jellyfin_uid
-    - jellyfin_gid
-    - jellyfin_hostname
+# NOTE: Make sure to re-add the task to check configurations if necessary
 
 - name: Fail if Jellyfin architecture is not supported
   ansible.builtin.fail:
